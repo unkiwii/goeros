@@ -18,3 +18,8 @@ $(BINARY): $(SOURCES)
 clean:
 	@echo Cleaning...
 	@if [ -f ${BINARY} ]; then rm ${BINARY}; fi
+
+.PHONY: run
+run: $(BINARY)
+	@echo Running...
+	@./$(BINARY)

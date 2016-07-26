@@ -17,7 +17,7 @@ func init() {
 }
 
 func Repl(args []string) error {
-	fmt.Printf("\n%s repl %s (%s)\n%s\n\n", info.NAME, info.VERSION, info.DATE, REPL_HELP)
+	fmt.Printf("\n%s repl, build: %s (%s)\n%s\n\n", info.NAME, info.VERSION, info.DATE, REPL_HELP)
 
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Printf(REPL_PROMPT)
