@@ -1,9 +1,10 @@
-package commands
+package repl
 
 import (
 	"bufio"
 	"fmt"
 	"github.com/unkiwii/goeros/info"
+	"github.com/unkiwii/goeros/repl/commands"
 	"os"
 )
 
@@ -12,17 +13,18 @@ const (
 	REPL_PROMPT = "> "
 )
 
-func init() {
-	Add("repl", "enters interactive mode", Repl)
-}
-
-func Repl(args []string) error {
+func Loop() error {
 	fmt.Printf("\n%s repl, build: %s (%s)\n%s\n\n", info.NAME, info.VERSION, info.DATE, REPL_HELP)
 
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Printf(REPL_PROMPT)
 	for scanner.Scan() {
-		fmt.Println("read:", scanner.Text())
+		t := scanner.Text()
+		if t != "" {
+			if err := commands.Execute(scanner.Text()); err != nil {
+				fmt.Println("error:", err)
+			}
+		}
 		fmt.Printf(REPL_PROMPT)
 	}
 
