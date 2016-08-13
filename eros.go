@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/unkiwii/goeros/commands"
+	"github.com/unkiwii/goeros/cli/commands"
 	"os"
 )
 
