@@ -1,43 +1,41 @@
-# IMPORTANT: All code in this file is valid, compilable code. All compiler errors will be inside a comment. You can use
-# this file as a quick reference for the language.
+# All code in this file is valid, compilable code.
+# All compiler errors will be inside a comment.
+# You can use this file as a quick reference for the language.
 
-# if you want to view this file with a highlighted syntax you can do one (or both) of this things:
-#
-#   1. Go to https://github.com/unkiwii/newlang-vim and install the vim plugin
-#
-#   2. Go to http://unkiwii.github.io/newlang/code_examples.html and see this file rendered as an html (but the .html
-#      can be older than this file)
+# If you want to view this file with a highlighted syntax you can go
+# download a vim plugin from https://github.com/unkiwii/eros.vim
 
 
 ########## comments ##########
 
-# any line starting with a '#' character is a comment, there are no multi-line comments
+# any line starting with a '#' character is a comment, there are no
+# multi-line comments
 
 
-########## useing code from other files and libraries ##########
+########## using code from other files and libraries ##########
 
-# using a file in same folder
+# import a file in same folder
 
-use aFile.nl
+import aFile.eros
 
-# using a file in a subfolder
+# import a file in a subfolder
 
-use foo/aFile.nl
-use foo/bar/aLib.nlib
+import foo/aFile.eros
+import foo/bar/aLib.lib
 
-# using a file in a parent folder
+# import a file in a parent folder
 
-use ../aFile.nl
-use ../../aLib.nlib
-use ../foo/aFile.nl
-use ../foo/bar/aLib.nlib
+import ../aFile.eros
+import ../../aLib.lib
+import ../foo/aFile.eros
+import ../foo/bar/aLib.lib
 
-# using several files
-use (
-  aFile.nl
-  anotherFile.nl
-  aLib.nlib
-  anotherLib.nlib
+# import several files
+import (
+  aFile.eros
+  anotherFile.eros
+  aLib.lib
+  anotherLib.lib
 )
 
 
