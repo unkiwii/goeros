@@ -61,6 +61,10 @@ func Remove(name string) error {
 	return nil
 }
 
+func IsValid(name string) bool {
+	return len(name) > 1 && name[:1] == "."
+}
+
 func Execute(name string) error {
 	c, ok := cmds[name]
 	if ok {
