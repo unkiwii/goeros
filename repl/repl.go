@@ -6,6 +6,7 @@ import (
 	"github.com/unkiwii/goeros/info"
 	"github.com/unkiwii/goeros/repl/commands"
 	"os"
+	"strings"
 )
 
 const (
@@ -19,10 +20,10 @@ func Loop() (err error) {
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Printf(REPL_PROMPT)
 	for scanner.Scan() {
-		t := scanner.Text()
+		t := strings.TrimSpace(scanner.Text())
 		if len(t) > 0 {
 			if commands.IsValid(t) {
-				err = commands.Execute(scanner.Text())
+				err = commands.Execute(t)
 			} else {
 				err = eval(t)
 			}
