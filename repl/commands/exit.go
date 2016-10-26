@@ -5,10 +5,10 @@ import (
 )
 
 func init() {
-	Add(".exit", "exit to the os", Exit)
+	add(".exit", "exit to the os", exit)
 }
 
-func Exit() error {
+func exit() error {
 	os.Exit(0)
 	return nil
 }

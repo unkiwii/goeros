@@ -6,10 +6,10 @@ import (
 )
 
 func init() {
-	Add(".license", "shows license", License)
+	add(".license", "shows license", license)
 }
 
-func License() error {
+func license() error {
 	fmt.Printf(`
        DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
                    Version 2, December 2004

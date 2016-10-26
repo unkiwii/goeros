@@ -35,7 +35,7 @@ func exists(name string) bool {
 	return exists
 }
 
-func All() entries {
+func getAllCommands() entries {
 	all := make(entries, len(cmds))
 	i := 0
 	for _, entry := range cmds {
@@ -45,7 +45,7 @@ func All() entries {
 	return all
 }
 
-func Add(name string, desc string, cmd command) error {
+func add(name string, desc string, cmd command) error {
 	if exists(name) {
 		return fmt.Errorf("command %s already added", name)
 	}
@@ -53,7 +53,7 @@ func Add(name string, desc string, cmd command) error {
 	return nil
 }
 
-func Remove(name string) error {
+func remove(name string) error {
 	if !exists(name) {
 		return fmt.Errorf("command %s already removed or was never added", name)
 	}

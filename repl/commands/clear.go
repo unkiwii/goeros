@@ -6,12 +6,17 @@ import (
 )
 
 func init() {
-	Add(".clear", "clears the screen", Clear)
+	add(".clear", "clears the screen", clear)
 }
 
-func Clear() error {
-	cmd := exec.Command("clear")
+func clear() error {
+	cmd := exec.Command(getClearCommand())
 	cmd.Stdout = os.Stdout
 	cmd.Run()
 	return nil
+}
+
+func getClearCommand() string {
+	//TODO: check for OS and run a different clear command
+	return "clear"
 }

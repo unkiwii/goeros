@@ -6,21 +6,21 @@ import (
 )
 
 func init() {
-	Add(".help", "shows this message", Help)
+	add(".help", "shows this message", help)
 }
 
-func Help() error {
+func help() error {
 	fmt.Print("\nAvailable commands:\n")
 	maxNameLength := 0
-	allSorted := All()
-	sort.Sort(allSorted)
-	for _, entry := range allSorted {
+	commands := getAllCommands()
+	sort.Sort(commands)
+	for _, entry := range commands {
 		l := len(entry.name)
 		if l > maxNameLength {
 			maxNameLength = l
 		}
 	}
-	for _, entry := range allSorted {
+	for _, entry := range commands {
 		fmt.Printf("\n   %*s   %s", maxNameLength, entry.name, entry.desc)
 	}
 	fmt.Println("\n")
