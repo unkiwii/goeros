@@ -1,14 +1,10 @@
 package commands
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func init() {
-	Add("run", "compile and run Eros program", Run)
-}
-
-func Run(args []string) error {
-	fmt.Printf("run %v\n", args)
-	return nil
+	add("run", "compile and run Eros program", func(args []string) error {
+		fmt.Printf("run %v\n", args)
+		return nil
+	})
 }

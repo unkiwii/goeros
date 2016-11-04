@@ -4,9 +4,16 @@ SOURCES := $(shell find $(SOURCEDIR) -name '*.go')
 BINARY=eros
 
 VERSION=$(shell git rev-parse --short HEAD)
-BUILD_TIME=$(shell date +%Y-%m-%d)
+YEAR_COMPILED=$(shell date +%Y)
+MONTH_COMPILED=$(shell date +%m)
+DAY_COMPILED=$(shell date +%d)
 
-LDFLAGS=-ldflags "-X github.com/unkiwii/goeros/info.VERSION=${VERSION} -X github.com/unkiwii/goeros/info.DATE=${BUILD_TIME}"
+LDFLAGS=-ldflags "\
+-X github.com/unkiwii/goeros/info.Version=${VERSION}\
+-X github.com/unkiwii/goeros/info.YearCompiled=${YEAR_COMPILED}\
+-X github.com/unkiwii/goeros/info.MonthCompiled=${MONTH_COMPILED}\
+-X github.com/unkiwii/goeros/info.DayCompiled=${DAY_COMPILED}\
+"
 
 .DEFAULT_GOAL: ${BINARY}
 

@@ -1,10 +1,8 @@
 package commands
 
 import (
-	"bytes"
-	"errors"
 	"fmt"
-	"github.com/unkiwii/goeros/info"
+	"strings"
 )
 
 type command func(args []string) error
@@ -15,58 +13,54 @@ type entry struct {
 	cmd  command
 }
 
-var cmds map[string]entry = make(map[string]entry)
+// make entries sortable
+type entries []entry
 
-func exists(name string) bool {
-	_, exists := cmds[name]
-	return exists
+func (a entries) Len() int {
+	return len(a)
 }
 
-func Add(name string, desc string, cmd command) error {
-	if exists(name) {
+func (a entries) Swap(i, j int) {
+	a[i], a[j] = a[j], a[i]
+}
+
+func (a entries) Less(i, j int) bool {
+	return strings.Compare(a[i].name, a[j].name) < 0
+}
+
+var cmds map[string]entry = make(map[string]entry)
+
+func getAllCommands() entries {
+	all := make(entries, len(cmds))
+	i := 0
+	for _, entry := range cmds {
+		all[i] = entry
+		i++
+	}
+	return all
+}
+
+func add(name string, desc string, cmd command) error {
+	if Has(name) {
 		return fmt.Errorf("command %s already added", name)
 	}
 	cmds[name] = entry{name, desc, cmd}
 	return nil
 }
 
-func Remove(name string) error {
-	if !exists(name) {
-		return fmt.Errorf("command %s already removed or was never added", name)
-	}
-	delete(cmds, name)
-	return nil
+func Has(name string) bool {
+	_, has := cmds[name]
+	return has
 }
 
 func Execute(name string, args []string) error {
-	c, ok := cmds[name]
-	if ok {
-		return c.cmd(args)
-	} else {
-		return usage()
-	}
-}
-
-func usage() error {
-	var buffer bytes.Buffer
-
-	buffer.WriteString(info.NAME)
-	buffer.WriteString(" is a tool for managing eros source code\n\n")
-	buffer.WriteString("Usage:\n\n\t")
-	buffer.WriteString(info.NAME)
-	buffer.WriteString(" command [arguments]\n\n")
-	buffer.WriteString("The commands are:\n")
-
-	for _, cmd := range cmds {
-		buffer.WriteString("\n\t")
-		buffer.WriteString(cmd.name)
-		buffer.WriteString("\t")
-		buffer.WriteString(cmd.desc)
+	c, found := cmds[name]
+	if !found {
+		c, found = cmds["help"]
+		if !found {
+			panic("can't find help command")
+		}
 	}
 
-	buffer.WriteString("\n\nUse \"")
-	buffer.WriteString(info.NAME)
-	buffer.WriteString(" help [command]\" for more information about a command")
-
-	return errors.New(buffer.String())
+	return c.cmd(args)
 }

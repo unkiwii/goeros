@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	command := "repl"
+	var command string
 	if len(os.Args) > 1 {
 		command = os.Args[1]
 	}

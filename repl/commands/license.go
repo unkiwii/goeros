@@ -6,11 +6,8 @@ import (
 )
 
 func init() {
-	add(".license", "shows license", license)
-}
-
-func license() error {
-	fmt.Printf(`
+	add(".license", "shows license", func() error {
+		fmt.Printf(`
        DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
                    Version 2, December 2004
 
@@ -25,7 +22,8 @@ TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
 
 0. You just DO WHAT THE FUCK YOU WANT TO.
 
-`, info.DATE, info.AUTHOR, info.EMAIL)
+`, info.YearCompiled, info.Author, info.AuthorMail)
 
-	return nil
+		return nil
+	})
 }

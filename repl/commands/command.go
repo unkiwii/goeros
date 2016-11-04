@@ -30,11 +30,6 @@ func (a entries) Less(i, j int) bool {
 
 var cmds map[string]entry = make(map[string]entry)
 
-func exists(name string) bool {
-	_, exists := cmds[name]
-	return exists
-}
-
 func getAllCommands() entries {
 	all := make(entries, len(cmds))
 	i := 0
@@ -46,28 +41,20 @@ func getAllCommands() entries {
 }
 
 func add(name string, desc string, cmd command) error {
-	if exists(name) {
+	if Has(name) {
 		return fmt.Errorf("command %s already added", name)
 	}
 	cmds[name] = entry{name, desc, cmd}
 	return nil
 }
 
-func remove(name string) error {
-	if !exists(name) {
-		return fmt.Errorf("command %s already removed or was never added", name)
-	}
-	delete(cmds, name)
-	return nil
-}
-
-func IsValid(name string) bool {
-	return len(name) > 1 && name[:1] == "."
+func Has(name string) bool {
+	_, has := cmds[name]
+	return has
 }
 
 func Execute(name string) error {
-	c, ok := cmds[name]
-	if ok {
+	if c, ok := cmds[name]; ok {
 		return c.cmd()
 	}
 

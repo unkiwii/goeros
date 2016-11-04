@@ -6,14 +6,12 @@ import (
 )
 
 func init() {
-	add(".clear", "clears the screen", clear)
-}
-
-func clear() error {
-	cmd := exec.Command(getClearCommand())
-	cmd.Stdout = os.Stdout
-	cmd.Run()
-	return nil
+	add(".clear", "clears the screen", func() error {
+		cmd := exec.Command(getClearCommand())
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+		return nil
+	})
 }
 
 func getClearCommand() string {
