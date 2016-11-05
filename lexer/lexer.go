@@ -1,5 +1,12 @@
 package lexer
 
+import (
+	"fmt"
+	"strings"
+	"unicode"
+	"unicode/utf8"
+)
+
 type Lexer struct {
 	name    string
 	input   string
@@ -9,7 +16,7 @@ type Lexer struct {
 	lexemes chan lexeme
 }
 
-type lexerState func(*Lexer, lexerState) lexerState
+type lexerState func(*Lexer) lexerState
 
 type lexeme struct {
 	typ lexemeType
@@ -30,8 +37,8 @@ func (l *lexeme) String() string {
 	return fmt.Sprintf("<%s, %s>", l.typ, l.val)
 }
 
-func (t *lexemeType) String() string {
-	switch l.typ {
+func (t lexemeType) String() string {
+	switch t {
 	case ltError:
 		return "error"
 	case ltEOF:
@@ -41,6 +48,7 @@ func (t *lexemeType) String() string {
 	case ltNumber:
 		return "number"
 	}
+	return fmt.Sprintf("type %q not recognized", t)
 }
 
 // lexeme types
@@ -51,6 +59,8 @@ const (
 	ltNumber
 )
 
+var startState = lexUnit
+
 func New(name string) *Lexer {
 	return &Lexer{name: name}
 }
@@ -60,12 +70,13 @@ func (l *Lexer) Lex(input string) chan lexeme {
 	l.start = 0
 	l.pos = 0
 	l.width = 0
+	l.lexemes = make(chan lexeme, 1)
 	go l.run()
 	return l.lexemes
 }
 
 func (l *Lexer) run() {
-	for state := lexIdentifier; state != nil; {
+	for state := startState; state != nil; {
 		state = state(l)
 	}
 	close(l.lexemes)
@@ -84,7 +95,7 @@ func (l *Lexer) errorf(format string, args ...interface{}) lexerState {
 }
 
 // returns the next rune in the input
-func (l *Lexer) next() (r int) {
+func (l *Lexer) next() (r rune) {
 	if l.pos >= len(l.input) {
 		l.width = 0
 		return eof
@@ -106,7 +117,7 @@ func (l *Lexer) backup() {
 }
 
 // peek returns but does not consume the next rune in the input.
-func (l *Lexer) peek() int {
+func (l *Lexer) peek() rune {
 	r := l.next()
 	l.backup()
 	return r
@@ -123,20 +134,24 @@ func (l *Lexer) accept(valid string) bool {
 }
 
 // acceptRun consumes a run of runes from the valid set.
-func (l *lexer) acceptRun(valid string) {
+func (l *Lexer) acceptRun(valid string) {
 	for strings.IndexRune(valid, l.next()) >= 0 {
 	}
 	l.backup()
 }
 
 // STATES
-func lexUnit(l *Lexer, prevState lexerState) lexerState {
+func lexUnit(l *Lexer) lexerState {
+	c := l.peek()
+	if c == '+' || c == '-' || (c >= '0' && c <= '9') {
+		lexNumber(l)
+	}
 	//TODO
-	return prevState
+	return nil
 }
 
 // EXAMPLE OF LEXING A NUMBER
-func lexNumber(l *Lexer, prevState lexerState) lexerState {
+func lexNumber(l *Lexer) lexerState {
 	// Optional leading sign.
 	l.accept("+-")
 	// Is it hex?
@@ -157,9 +172,12 @@ func lexNumber(l *Lexer, prevState lexerState) lexerState {
 	// Next thing mustn't be alphanumeric.
 	if isAlphaNumeric(l.peek()) {
 		l.next()
-		return l.errorf("bad number syntax: %q",
-			l.input[l.start:l.pos])
+		return l.errorf("bad number syntax: %q", l.input[l.start:l.pos])
 	}
 	l.emit(ltNumber)
-	return prevState
+	return nil
+}
+
+func isAlphaNumeric(r rune) bool {
+	return r == '_' || unicode.IsLetter(r) || unicode.IsDigit(r)
 }

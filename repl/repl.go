@@ -3,6 +3,7 @@ package repl
 import (
 	"bufio"
 	"fmt"
+	"github.com/unkiwii/goeros/lexer"
 	"github.com/unkiwii/goeros/repl/commands"
 	"os"
 	"strings"
@@ -43,5 +44,14 @@ func Loop() (err error) {
 
 func eval(t string) error {
 	fmt.Printf("eval: %s\n", t)
+	l := lexer.New("eval")
+	c := l.Lex(t)
+	fmt.Println("result:")
+	for r, ok := <-c; ok; {
+		fmt.Printf("  %s\n", r)
+		if c == nil {
+			break
+		}
+	}
 	return nil
 }
