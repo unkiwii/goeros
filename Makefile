@@ -30,3 +30,8 @@ clean:
 run: $(BINARY)
 	@echo Running...
 	@./$(BINARY)
+
+.PHONY: repl
+repl: $(BINARY)
+	@echo Running REPL...
+	@./$(BINARY) repl

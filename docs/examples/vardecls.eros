@@ -19,6 +19,7 @@ SomeType anIdentifier := SomeType
 # blocks (blockValue)
 anIdentifier := block value
 SomeType anIdentifier := block value
+SomeType anIdentifier := [ true ]
 SomeType anIdentifier := [ Boolean | true ]
 SomeType anIdentifier := [ Boolean value | false ]
 SomeType anIdentifier := [ Boolean value: String v | true ]

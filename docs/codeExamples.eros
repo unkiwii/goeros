@@ -44,9 +44,11 @@ import (
 # the way to declare a variable is:
 
 Type name := "value"
+# or
+name := "value"
 
 # where:
-#   Type    is the type (or class) of the variable, any type must start with a upper case character and be followed by
+#   Type    is the (optional) type of the variable, any type must start with a upper case character and be followed by
 #           any upper or lower case character, as in: Type, Object, HTTPServer, etc.
 #
 #   name    is the name of the variable, any name must start with a lower case character and be followed by any upper or
@@ -65,29 +67,25 @@ Type name := "value"
 # it will be global (accessible by the whole code of the program)
 
 Number aGlobalNumber := 123
+# or
+anotherGlobalNumber := 456
+
 String aGlobalString := "Hello World"
+# or
+anotherGlobalString := "Goodbye World"
 
 # if you declare them inside a block of code it will local to that block of code and invisible from anywhere else; same
 # within a type.
 
-# for a constant is just as a variable with const added in front
+# a constant is a value that can't change in time and is writter in ALL CAPS separating each word with a '_'
 
-const Type NAME := "value"
-const Type PI := 3.14159
+Number PI := 3.14159
+# or
+PI := 3.14159
 
-# and from that moment on the value of NAME can't change
-
-# this language has type inference, so you can (in some cases) omit the type, so the next constructs are valid:
-name := "Jhon Doe"
-# type of name is 'String'
-
-age := 24
-# type of age is 'Number'
-
-const PI := 3.14159
-# type of PI i 'const Number'
-
-# in each case, the types are inferred
+String LONG_NAME := "value"
+# or
+LONG_NAME := "value"
 
 
 ########## literals ##########
@@ -107,18 +105,19 @@ const PI := 3.14159
 #   "Hello World!"  # inside double quotes
 #
 # Lists: (lists are homogeneous: all values have the same type)
-#   [1, 2, 3]           # list of integers  (Number)
-#   [0.12, 0.13, 0.15]  # list of reals     (Number)
-#   ["a", "b", "c"]     # list of strings   (String or [Char])
-#   [a, b, c]           # list of objects   (Object or any given type)
+#   [1, 2, 3]           # list of integers  type is [Number]
+#   [0.12, 0.13, 0.15]  # list of reals     type is [Number]
+#   [1, 2.4, 3]         # list of numbers   type is [Number]
+#   ["a", "b", "c"]     # list of strings   type is [String] or [[Char]]
+#   [a, b, c]           # list of objects   type is [Type] if and only if a, b, and c are from type Type
 #
 # Tuples: (tuples can be heterogeneous: each value can have it's own type)
-#   (1, 2)          # a pair of numbers
-#   ("a", 0.2, s)   # a triple of a string, a number and an object
+#   (1, 2)          # a pair      type is (Number, Number)
+#   ("a", 0.2, s)   # a triple    type is (String, Number, Type) if s is of type Type
 #
 # Map:
-#   {"a": 1, "b": 2}      # a map from strings to integers
-#   {anObject: "name", otherObject: "value"}  # a map from objects (of some type) to strings
+#   {"a": 1, "b": 2}                            # a map from strings to integers
+#   {anObject: "name", otherObject: "value"}    # a map from objects (of some type) to strings
 #
 #
 # in C, for example, a literal value is a legal statement, but not here, you can't just write a number or a string alone

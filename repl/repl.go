@@ -10,20 +10,23 @@ import (
 )
 
 const (
-	infoCommand = ".info"
-	prompt      = "> "
+	INFO_COMMAND = ".info"
+	PROMPT       = "> "
 )
 
+// Loop start and executes the main loop of the repl
 func Loop() (err error) {
-	if commands.Has(infoCommand) {
-		if err = commands.Execute(infoCommand); err != nil {
-			panic(fmt.Sprintf("%s command not found"))
+	if commands.Has(INFO_COMMAND) {
+		if err = commands.Execute(INFO_COMMAND); err != nil {
+			panic(fmt.Sprintf("%s command not found", INFO_COMMAND))
 		}
 	}
-	fmt.Println("Type .help for more information\n")
+
+	fmt.Println("Type .help for more information")
+	fmt.Println()
 
 	scanner := bufio.NewScanner(os.Stdin)
-	fmt.Printf(prompt)
+	fmt.Printf(PROMPT)
 	for scanner.Scan() {
 		t := strings.TrimSpace(scanner.Text())
 		if len(t) > 0 {
@@ -36,22 +39,23 @@ func Loop() (err error) {
 				fmt.Println("error:", err)
 			}
 		}
-		fmt.Printf(prompt)
+		fmt.Printf(PROMPT)
 	}
 
 	return nil
 }
 
 func eval(t string) error {
-	fmt.Printf("eval: %s\n", t)
 	l := lexer.New("eval")
 	c := l.Lex(t)
-	fmt.Println("result:")
-	for r, ok := <-c; ok; {
-		fmt.Printf("  %s\n", r)
-		if c == nil {
-			break
+	for {
+		select {
+		case r, ok := <-c:
+			if ok {
+				fmt.Printf("%s\n", r)
+			} else {
+				return nil
+			}
 		}
 	}
-	return nil
 }

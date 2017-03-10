@@ -28,7 +28,7 @@ func (a entries) Less(i, j int) bool {
 	return strings.Compare(a[i].name, a[j].name) < 0
 }
 
-var cmds map[string]entry = make(map[string]entry)
+var cmds = make(map[string]entry)
 
 func getAllCommands() entries {
 	all := make(entries, len(cmds))
@@ -48,11 +48,13 @@ func add(name string, desc string, cmd command) error {
 	return nil
 }
 
+// Has take a string and returns true when the given string is a valid command
 func Has(name string) bool {
 	_, has := cmds[name]
 	return has
 }
 
+// Execute take a string and executes the command with that name
 func Execute(name string) error {
 	if c, ok := cmds[name]; ok {
 		return c.cmd()

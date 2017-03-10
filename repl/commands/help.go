@@ -20,7 +20,7 @@ func init() {
 		for _, entry := range commands {
 			fmt.Printf("\n   %*s   %s", maxNameLength, entry.name, entry.desc)
 		}
-		fmt.Println("\n")
+		fmt.Println()
 
 		return nil
 	})

@@ -7,6 +7,7 @@ import (
 	"unicode/utf8"
 )
 
+// Lexer has all the lexer data, created with lexer.New() and used to lex an input
 type Lexer struct {
 	name    string
 	input   string
@@ -27,7 +28,7 @@ const eof = -1
 
 type lexemeType int
 
-func (l *lexeme) String() string {
+func (l lexeme) String() string {
 	switch l.typ {
 	case ltEOF:
 		return "EOF"
@@ -48,7 +49,7 @@ func (t lexemeType) String() string {
 	case ltNumber:
 		return "number"
 	}
-	return fmt.Sprintf("type %q not recognized", t)
+	return fmt.Sprintf("type %q not recognized", int(t))
 }
 
 // lexeme types
@@ -61,10 +62,12 @@ const (
 
 var startState = lexUnit
 
+// New creates an new Lexer used to hold all the information of a lex operation
 func New(name string) *Lexer {
 	return &Lexer{name: name}
 }
 
+// Lex performs the lex operation on the given input
 func (l *Lexer) Lex(input string) chan lexeme {
 	l.input = input
 	l.start = 0
@@ -143,14 +146,14 @@ func (l *Lexer) acceptRun(valid string) {
 // STATES
 func lexUnit(l *Lexer) lexerState {
 	c := l.peek()
-	if c == '+' || c == '-' || (c >= '0' && c <= '9') {
-		lexNumber(l)
+	if c == '.' || c == '+' || c == '-' || (c >= '0' && c <= '9') {
+		return lexNumber(l)
 	}
-	//TODO
+	//TODO: addmore lexXXX
 	return nil
 }
 
-// EXAMPLE OF LEXING A NUMBER
+// EXAMPLE OF LEXING A NUMBER (THIS IS NOT CORRECT BUT IS AN EXAMPLE)
 func lexNumber(l *Lexer) lexerState {
 	// Optional leading sign.
 	l.accept("+-")
